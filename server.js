@@ -24,5 +24,5 @@ app.use('/', htmlRoutes);
 
 // Designates PORT where the server will be listening
 app.listen(PORT, () => {
-    console.log(`API server listening to PORT ${PORT}!`);
+    console.log(`API server running on PORT ${PORT}!`);
 });
