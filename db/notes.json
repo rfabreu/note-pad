@@ -1,6 +1,9 @@
-[
-    {
-        "title":"Test Title",
-        "text":"Test text"
-    }
-]
+{
+    "notes": [
+      {
+        "title": "Note Example",
+        "text": "This is an example note.",
+        "id": "1f06b284-4109-4e63-9e82-5c34b601a7e5"
+      }
+    ]
+  }
