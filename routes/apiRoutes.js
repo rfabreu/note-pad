@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const fs = require('fs');
 const path = require('path');
-const { createNewNote, deleteNote } = require('../lib/notes');
-const { notes } = require('../db/db.json');
-const { uuid } = require('uuidv4');
+const { createNewNote, validateNote } = require('../lib/notes');
+const { notes } = require('../db/notes.json');
+const { v4: uuidv4 } = require('uuid');
 
 router.get('/notes', (req, res) => {
     const result = notes;
@@ -15,7 +15,7 @@ router.get('/notes', (req, res) => {
 });
 
 router.post('/notes', (req, res) => {
-    req.body.id = uuid().toString();
+    req.body.id = uuidv4().toString();
 
     if (!validateNote(req.body)) {
         res.status(400).send('The note you entered is not formatted properly.');
@@ -26,7 +26,7 @@ router.post('/notes', (req, res) => {
 });
 
 router.delete('/notes/:id', (req, res) => {
-    let jsonFilePath = path.join(__dirname, '/db/db.json');
+    let jsonFilePath = path.join(__dirname, '/db/notes.json');
     for (let i = 0; i < notes.length; i++) {
         if (notes[i].id == req.params.id) {
             notes.splice(i, 1);
