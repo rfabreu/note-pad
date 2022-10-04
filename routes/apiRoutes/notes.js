@@ -1,16 +1,14 @@
-const { createNewNote, validateNote } = require('../../lib/notes');
-const { notes } = require('../../db/notes');
-//npm packages
-const { uuid } = require('uuidv4');
 const router = require("express").Router();
 const fs = require("fs");
 const path = require("path");
-
+const { uuid } = require('uuidv4');
+const { createNote, checkNote } = require('../../lib/notes');
+const { notes } = require('../../db/notes');
 
 router.get('/notes', (req, res) => {
-    const result = notes;
-    if (result) {
-        res.json(result);
+    const retrieve = notes;
+    if (retrieve) {
+        res.json(retrieve);
     } else {
         res.sendStatus(404);
     }
@@ -18,32 +16,27 @@ router.get('/notes', (req, res) => {
 
 router.post('/notes', (req, res) => {
     req.body.id = uuid().toString();
-
-    if (!validateNote(req.body)) {
-        res.status(400).send('The note is not properly formatted.');
+    if (!checkNote(req.body)) {
+        res.status(400).send('Note not in a valid format. Please try again!');
     } else {
-        const note = createNewNote(req.body, notes);
-        res.json(note);
+        const newNote = createNote(req.body, notes);
+        res.json(newNote);
     }
 });
 
 router.delete('/notes/:id', (req, res) => {
     let jsonFilePath = path.join(__dirname, "../../db/notes.json");
     for (let i = 0; i < notes.length; i++) {
-
         if (notes[i].id == req.params.id) {
-            // Splice takes index position, and then deletes the respective note.
             notes.splice(i, 1);
             break;
         }
     }
-    // Write to notes.json file again
     fs.writeFileSync(jsonFilePath, JSON.stringify(notes), function (err) {
-
         if (err) {
             return console.log(err);
         } else {
-            console.log("Your deleted!");
+            console.log("Note deleted!");
         }
     });
     res.json(notes);
